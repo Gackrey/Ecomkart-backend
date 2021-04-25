@@ -25,7 +25,7 @@ async function SaveData(){
 const { initialzeDBConnection } = require('./db/db')
 // SaveData()
 initialzeDBConnection();
-const PORT = 3000;
+const PORT = process.env.PORT || 80;
 app.get('/', (request, response) => {
   response.json({ hello: "world" })
 });
