@@ -18,4 +18,17 @@ const deleteWishlist = async (req, res) => {
   res.json({ success: true });
 };
 
-module.exports = { addWishlist, deleteWishlist };
+const wishToCart = async (req, res) => {
+  let { user } = req;
+  const wishlist_id = req.body._id;
+  const cartItem = req.body;
+  const updatedWishlist = user.wishlist.filter(
+    (item) => item._id !== wishlist_id
+  );
+  user.cart.push(cartItem);
+  user = extend(user, { wishlist: updatedWishlist });
+  await user.save();
+  res.json({ success: true });
+};
+
+module.exports = { addWishlist, deleteWishlist, wishToCart };
