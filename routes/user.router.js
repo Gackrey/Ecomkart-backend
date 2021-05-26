@@ -1,74 +1,30 @@
-const express = require('express')
+const express = require("express");
 const router = express.Router();
-const { User } = require('../models/user.model')
-const { extend } = require("lodash");
+const { addCart, deleteCart } = require("../Middlewares/cart");
+const { getUserDetails, getUserbyId } = require("../Middlewares/getUserbyId");
+const { login } = require("../Middlewares/login");
+const { signup } = require("../Middlewares/signup");
+const { addWishlist, deleteWishlist } = require("../Middlewares/wishlist");
+const {
+  addAddress,
+  deleteAddress,
+  updateAddress,
+} = require("../Middlewares/address");
 
-router.route('/signup')
-  .post(async (req, res) => {
-    try {
-      const user = req.body;
-      const NewUser = User(user);
-      const savedProduct = await NewUser.save()
-      res.json({ success: true, icon: savedProduct.firstname[0], id: savedProduct._id })
-    }
-    catch (err) {
-      console.log(err)
-      res.status(500).json({ success: false, message: "Unable to add users", errorMessage: err.message })
-    }
-  })
+router.route("/signup").post(signup);
 
-router.route('/login')
-  .get((req, res) => {
-    res.send('Login')
-  })
-  .post((req, res) => {
-    const user = req.body;
-    try {
-      User.findOne(user, function (err, docs) {
-        if (docs === null) {
-          res.status(500).json({ success: false, message: "Unable to find user" })
-        }
-        else {
-          res.json({ success: true, icon: docs.firstname[0], id: docs._id })
-        }
-      })
-    }
-    catch (err) {
-      res.status(500).json({ success: false, message: "Unable to find user", errorMessage: err.message })
-    }
-  })
+router.route("/login").post(login);
 
+router.param("userID", getUserbyId);
 
-router.param('userID', async (req, res, next, id) => {
-  try {
-    const user = await User.findById(id);
-    if (!user)
-      return res.status(400).json({ success: false, message: "product not found" })
+router.route("/:userID").get(getUserDetails);
 
-    req.user = user;
-    next()
-  }
-  catch (err) {
-    res.status(400).json({ success: false, message: "could not retrieve product " })
-  }
-})
+router.route("/:userID/wishlist").post(addWishlist).delete(deleteWishlist);
 
-router.route("/:userID")
-  .get((req, res) => {
-    const { user } = req
-    user.__v = undefined;
-    res.json({ success: true, user })
-  })
-  .post(async (req, res) => {
-    let { user } = req;
-    const userUpdate = req.body;
-    user = extend(user, userUpdate)
-    user.updated = Date.now();
+router.route("/:userID/cart").post(addCart).delete(deleteCart);
 
-    const NewUser = User(user);
-    const savedProduct = await NewUser.save()
-    res.json({ success: true, savedProduct })
-  })
+router.route("/:userID/address").post(addAddress).delete(deleteAddress);
 
+router.route("/:userID/updateAddress").post(updateAddress);
 
-module.exports = router
+module.exports = router;
