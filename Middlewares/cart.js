@@ -58,7 +58,10 @@ const decCart = async (req, res) => {
   } else {
     const cart_id = req.body._id;
     const updatedCart = user.cart.filter((item) => item._id !== cart_id);
-    user = extend(user, { cart: updatedCart });
+    const updatedWishlist = user.wishlist.map((item) =>
+      item._id === cart_id ? { ...item, isinCart: false } : item
+    );
+    user = extend(user, { cart: updatedCart }, { wishlist: updatedWishlist });
     await user.save();
   }
   res.json({ success: true });
