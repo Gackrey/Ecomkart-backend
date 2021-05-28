@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const { User } = require("../models/user.model");
 const login = async (req, res) => {
   const user = req.body;
@@ -8,17 +10,19 @@ const login = async (req, res) => {
           .status(500)
           .json({ success: false, message: "Unable to find user" });
       } else {
-        res.json({ success: true, icon: docs.firstname[0], id: docs._id });
+        const token = jwt.sign(
+          { id: docs._id },
+          process.env.ACCESS_TOKEN_SECRET
+        );
+        res.json({ success: true, icon: docs.firstname[0], id: token });
       }
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to find user",
-        errorMessage: err.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Unable to find user",
+      errorMessage: err.message,
+    });
   }
 };
 

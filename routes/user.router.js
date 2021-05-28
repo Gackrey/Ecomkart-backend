@@ -11,20 +11,29 @@ router.route("/signup").post(signup);
 
 router.route("/login").post(login);
 
-router.param("userID", getUserbyId);
+router.route("/userDetails").get(getUserbyId, getUserDetails);
 
-router.route("/:userID").get(getUserDetails);
+router
+  .route("/wishlist")
+  .post(getUserbyId, addWishlist)
+  .delete(getUserbyId, deleteWishlist);
 
-router.route("/:userID/wishlist").post(addWishlist).delete(deleteWishlist);
-router.route("/:userID/wish-to-cart").post(wishToCart);
+router.route("/wish-to-cart").post(getUserbyId, wishToCart);
 
-router.route("/:userID/cart").post(addCart).delete(deleteCart);
-router.route("/:userID/inc-cart").post(incCart);
-router.route("/:userID/dec-cart").post(decCart);
-router.route("/:userID/cart-to-wish").post(cartToWish);
+router
+  .route("/cart")
+  .post(getUserbyId, addCart)
+  .delete(getUserbyId, deleteCart);
+  
+router.route("/inc-cart").post(getUserbyId, incCart);
+router.route("/dec-cart").post(getUserbyId, decCart);
+router.route("/cart-to-wish").post(getUserbyId, cartToWish);
 
-router.route("/:userID/address").post(addAddress).delete(deleteAddress);
+router
+  .route("/address")
+  .post(getUserbyId, addAddress)
+  .delete(getUserbyId, deleteAddress);
 
-router.route("/:userID/updateAddress").post(updateAddress);
+router.route("/updateAddress").post(getUserbyId, updateAddress);
 
 module.exports = router;
