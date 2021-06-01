@@ -36,18 +36,12 @@ const userSchema = new Schema(
       },
     },
 
-    cart: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "products",
-      },
-    ],
-    wishlist: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "products",
-      },
-    ],
+    cart: {
+      type: Array,
+    },
+    wishlist: {
+      type: Array,
+    },
     addresses: {
       type: Array,
     },
