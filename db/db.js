@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-
+require("dotenv").config();
 function initialzeDBConnection() {
-  mongoose.connect("mongodb+srv://gackrey:bokakhat555@neog-cluster.ffik4.mongodb.net/Ecomkart?retryWrites=true&w=majority", {
+  mongoose.connect(process.env.DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
