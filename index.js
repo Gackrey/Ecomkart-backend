@@ -1,13 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const razorpayRoute = require('./routes/razorPay.router')
 const cors = require('cors');
-const bodyParser = require('body-parser')
 const productRoute = require('./routes/product.router')
 const userRoute = require('./routes/user.router')
 const productData = require('./models/product-data')
 const { Product } = require('./models/product.model')
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
 
 async function SaveData(){
@@ -25,13 +24,14 @@ async function SaveData(){
 const { initialzeDBConnection } = require('./db/db')
 // SaveData()
 initialzeDBConnection();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.get('/', (request, response) => {
   response.json({ hello: "world" })
 });
 
 app.use('/products',productRoute)
 app.use('/user',userRoute)
+app.use('/razorpay',razorpayRoute)
 /**
  * 404 Route Handler
  * Note: DO not MOVE. This should be the last route
