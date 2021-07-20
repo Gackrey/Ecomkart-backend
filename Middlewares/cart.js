@@ -22,6 +22,16 @@ const deleteCart = async (req, res) => {
   await user.save();
   res.json({ success: true });
 };
+const deleteAllFromCart = async (req, res) => {
+  let { user } = req;
+  const cart_ids = req.body;
+  const updatedWishlist = user.wishlist.map((item) =>
+    cart_ids.includes(item._id) ? { ...item, isinCart: false } : item
+  );
+  user = extend(user, { cart: [] }, { wishlist: updatedWishlist });
+  await user.save();
+  res.json({ success: true });
+};
 
 const cartToWish = async (req, res) => {
   let { user } = req;
@@ -67,4 +77,4 @@ const decCart = async (req, res) => {
   res.json({ success: true });
 };
 
-module.exports = { addCart, deleteCart, cartToWish, incCart, decCart };
+module.exports = { addCart, deleteCart,deleteAllFromCart, cartToWish, incCart, decCart };

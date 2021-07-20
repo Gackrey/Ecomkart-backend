@@ -4,7 +4,7 @@ const { getUserDetails, getUserbyId } = require("../Middlewares/getUserbyId");
 const { login } = require("../Middlewares/login");
 const { signup } = require("../Middlewares/signup");
 const { addWishlist, deleteWishlist,wishToCart } = require("../Middlewares/wishlist");
-const { addCart, deleteCart, incCart, decCart, cartToWish,} = require("../Middlewares/cart");
+const { addCart, deleteCart,deleteAllFromCart, incCart, decCart, cartToWish,} = require("../Middlewares/cart");
 const { addAddress, deleteAddress, updateAddress,} = require("../Middlewares/address");
 
 router.route("/signup").post(signup);
@@ -24,7 +24,8 @@ router
   .route("/cart")
   .post(getUserbyId, addCart)
   .delete(getUserbyId, deleteCart);
-  
+
+router.route("/payment-successful").delete(getUserbyId, deleteAllFromCart);
 router.route("/inc-cart").post(getUserbyId, incCart);
 router.route("/dec-cart").post(getUserbyId, decCart);
 router.route("/cart-to-wish").post(getUserbyId, cartToWish);
