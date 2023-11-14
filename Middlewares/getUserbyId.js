@@ -4,13 +4,17 @@ const { User } = require("../models/user.model");
 const getUserbyId = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    const decoded = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET)
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id);
     if (!user)
-      return res.status(400).json({ success: false, message: "user not found" })
+      return res
+        .status(400)
+        .json({ success: false, message: "user not found" });
 
-    req.user = user;
-    next()
+    let { password, ...rest } = user;
+
+    req.user = rest;
+    next();
   } catch (err) {
     res
       .status(400)
