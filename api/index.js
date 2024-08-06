@@ -1,3 +1,3 @@
 import apis from '../'
 
-export default apis
+module.exports = apis;
