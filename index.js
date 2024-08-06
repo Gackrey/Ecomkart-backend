@@ -53,3 +53,4 @@ app.listen(PORT, () => {
   console.log('Server Started at port', PORT);
 })
 
+module.exports = app;
