@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const RazorPay = require("razorpay");
+const nodeFetch = require("node-fetch");
 const keys = require("../keys");
 
 const razorInstance = new RazorPay({
@@ -36,7 +37,7 @@ router.get("/order/:PaymentAmount", (req, res) => {
 router.post("/capture/:paymentId/:PaymentAmount", async (req, res) => {
   try {
     const price = req.params.PaymentAmount;
-    const response = await fetch(
+    const response = await nodeFetch(
       `https://api.razorpay.com/v1/payments/${req.params.paymentId}/capture`,
       {
         method: "POST",
