@@ -53,9 +53,7 @@ router.post("/capture/:paymentId/:PaymentAmount", async (req, res) => {
 
     // Check if the request was successful
     if (!response.ok) {
-      return res
-        .status(response.status)
-        .json({ message: "Something went wrong" });
+      return res.status(response.status).json({ message: response.statusText });
     }
 
     const responseBody = await response.json();
