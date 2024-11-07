@@ -1,7 +1,6 @@
 const { extend } = require("lodash");
 const addCart = async (req, res) => {
   let { user } = req;
-  console.log("user", user);
   const cartItem = req.body;
   user.cart.push(cartItem);
   const updatedWishlist = user.wishlist.map((item) =>

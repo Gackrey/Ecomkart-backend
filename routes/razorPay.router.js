@@ -2,14 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const RazorPay = require("razorpay");
+const keys = require("../keys");
 
 const razorInstance = new RazorPay({
-  key_id: process.env.razorIdKey,
-  key_secret: process.env.razorIdSecret,
+  key_id: keys.razorIdKey,
+  key_secret: keys.razorIdSecret,
 });
 
 const credentials = Buffer.from(
-  `${process.env.razorIdKey}:${process.env.razorIdSecret}`
+  `${keys.razorIdKey}:${keys.razorIdSecret}`
 ).toString("base64");
 
 router.get("/order/:PaymentAmount", (req, res) => {
