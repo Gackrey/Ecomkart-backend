@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const RazorPay = require("razorpay");
-const request = require("request");
 
-const keys = require("../keys");
 const razorInstance = new RazorPay({
-  key_id: keys.razorIdKey,
-  key_secret: keys.razorIdSecret,
+  key_id: process.env.razorIdKey,
+  key_secret: process.env.razorIdSecret,
 });
+
+const credentials = Buffer.from(
+  `${process.env.razorIdKey}:${process.env.razorIdSecret}`
+).toString("base64");
 
 router.get("/order/:PaymentAmount", (req, res) => {
   try {
@@ -30,27 +32,36 @@ router.get("/order/:PaymentAmount", (req, res) => {
   }
 });
 
-router.post("/capture/:paymentId/:PaymentAmount", (req, res) => {
+router.post("/capture/:paymentId/:PaymentAmount", async (req, res) => {
   try {
     const price = req.params.PaymentAmount;
-    return request(
+    const response = await fetch(
+      `https://api.razorpay.com/v1/payments/${req.params.paymentId}/capture`,
       {
         method: "POST",
-        url: `https://${keys.razorIdKey}:${keys.razorIdSecret}@api.razorpay.com/v1/payments/${req.params.paymentId}/capture`,
-        form: {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${credentials}`,
+        },
+        body: JSON.stringify({
           amount: price * 100,
           currency: "INR",
-        },
-      },
-      async function (err, response, body) {
-        if (err) {
-          return res.status(500).json({ message: "Something wrong" });
-        }
-        return res.status(200).json(body);
+        }),
       }
     );
+
+    // Check if the request was successful
+    if (!response.ok) {
+      return res
+        .status(response.status)
+        .json({ message: "Something went wrong" });
+    }
+
+    const responseBody = await response.json();
+    return res.status(200).json(responseBody);
   } catch (err) {
-    return res.status(500).json({ message: "Something wrong" });
+    console.error("Error capturing payment:", err);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 });
 module.exports = router;

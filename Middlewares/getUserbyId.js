@@ -11,16 +11,7 @@ const getUserbyId = async (req, res, next) => {
         .status(400)
         .json({ success: false, message: "user not found" });
 
-    req.user = {
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      cart: user.cart,
-      wishlist: user.wishlist,
-      addresses: user.addresses,
-    };
+    req.user = user;
 
     next();
   } catch (err) {

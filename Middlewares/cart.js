@@ -1,6 +1,7 @@
 const { extend } = require("lodash");
 const addCart = async (req, res) => {
   let { user } = req;
+  console.log("user", user);
   const cartItem = req.body;
   user.cart.push(cartItem);
   const updatedWishlist = user.wishlist.map((item) =>
@@ -77,4 +78,11 @@ const decCart = async (req, res) => {
   res.json({ success: true });
 };
 
-module.exports = { addCart, deleteCart,deleteAllFromCart, cartToWish, incCart, decCart };
+module.exports = {
+  addCart,
+  deleteCart,
+  deleteAllFromCart,
+  cartToWish,
+  incCart,
+  decCart,
+};
